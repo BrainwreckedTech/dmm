@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=DivaModManager
 Exec=dmm run
 Type=Application
+Categories=Games
 StartupNotify=true
 Terminal=false
 Comment=DivaModManager for Mega Mix+
