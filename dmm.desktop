@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=DivaModManager
+Exec=dmm run
+Type=Application
+StartupNotify=true
+Terminal=false
+Comment=DivaModManager for Mega Mix+
+Icon=dmmlogo.png
+StartupWMClass=DivaModManager.exe
+Hidden=true

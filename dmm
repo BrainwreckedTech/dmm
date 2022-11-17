@@ -1,0 +1,182 @@
+#! /bin/sh
+
+# Uncomment to see what the shell is doing
+#set -x
+
+# Uncomment to append "-testing" to things so changes can be tested
+# without affecting a working existing installation
+#TESTING='-testing'
+
+DMM_ROOT="${HOME}/.dmm${TESTING}"
+DMM_PRFX="${DMM_ROOT}/prefix"
+DMM_FLDR="${DMM_ROOT}/program"
+DMM_WINE="${DMM_ROOT}/wine"
+TMP_FLDR="$(mktemp -d)"
+
+MISSDEPS=0
+
+[ ! -e /usr/bin/basename ] && echo 'Command basename not found' && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /bin/cp ]           && echo 'Command cp not found'       && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/curl ]     && echo 'Command curl not found'     && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/find ]     && echo 'Commnad find not found'     && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /bin/grep ]         && echo 'Command grep not found'     && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /bin/mkdir ]        && echo 'Command mkdir not found'    && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/pv ]       && echo 'Command pv not found'       && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/realpath ] && echo 'Command realpath not found' && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /bin/rm ]           && echo 'Command rm not found'       && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /bin/sed ]          && echo 'Command sed not found'      && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /bin/tar ]          && echo 'Command tar not found'      && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/wine ]     && echo 'Command wine not found'     && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/unzip ]    && echo 'Command unzip not found'    && MISSDEPS=$((MISSDEPS+1))
+
+[ ${MISSDEPS} -gt 0 ] && echo 'Please install missing dependencies.' && exit 1
+
+check_install () {
+  case "${1}" in
+    proton)
+      get_lutris_folder | grep -q '^' && echo 'Found existing GE-Proton install' || false
+      ;;
+    dotnet)
+      if [ -f "${DMM_PRFX}/drive_c/Program Files/dotnet/dotnet.exe" ]; then
+        echo "Found .NET $(ls -1 --color=never "${DMM_PRFX}/drive_c/Program Files/dotnet/host/fxr") in WINE prefix"
+      else
+        false
+      fi
+    ;;
+    dmm)
+      [ -f "${DMM_FLDR}/DivaModManager.exe" ] && echo 'Found DivaModManager.exe' || false
+    ;;
+    shortcut)
+      if [ -f "${HOME}/.local/share/applications/dmm${TESTING}.desktop" ]; then
+        echo "Found desktop shortcut in user applications"
+      else
+        false
+      fi
+    ;;
+    appicon)
+      if [ -f "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png" ]; then
+        echo "Found application icon in user pixmaps"
+      else
+        false
+      fi
+    ;;
+  esac
+}
+
+get_lutris_folder () {
+  /usr/bin/find "${DMM_WINE}" -type d -name 'lutris-GE-Proton*-x86_64'
+}
+
+get_proton () {
+  # Get the latest GE-Proton
+  # The /releases/latest URL will always be a redirect to  /releases/tag/[actual]
+  # We can use this to determine what the latest release is automagically
+  REDIRECT="$(/usr/bin/curl -is https://github.com/GloriousEggroll/wine-ge-custom/releases/latest | /bin/sed 's/\r//g' | /bin/grep '^location')"
+  # Drop off everything up to the last slash in the URL
+  GEP_VRSN="${REDIRECT##*\/}"
+  # This will get redirected as well, but you do NOT want to deal with the actual GitHub download links :O
+  WGEC_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/${GEP_VRSN}/wine-lutris-${GEP_VRSN}-x86_64.tar.xz"
+  echo ":: Setting up ${GEP_VRSN}..."
+  echo " -> Downloading"
+  /usr/bin/curl -L "${WGEC_URL}" -o "${TMP_FLDR}/wine-ge-custom.tar.xz" --progress-bar || exit 3
+  echo " -> Extracting"
+  /usr/bin/pv "${TMP_FLDR}/wine-ge-custom.tar.xz" | /bin/tar -xJf - -C "${DMM_WINE}" || exit 4
+}
+
+get_dotnet () {
+  # Get .NET Runtime 6.0.2 and install it in the prefix
+  echo ":: Setting up .NET Runtime 6.0.2 in WINE prefix..."
+  DNET_URL=https://download.visualstudio.microsoft.com/download/pr/efa32b7a-6eec-4d97-9cdc-c7336a29a749/3df4296170397cf60884dae1be3d103b/windowsdesktop-runtime-6.0.2-win-x64.exe
+  echo " -> Downloading"
+  /usr/bin/curl "${DNET_URL}" -o "${TMP_FLDR}/dnr.exe" --progress-bar || exit 5
+  echo " -> Installing"
+  LUT_FLDR="$(get_lutris_folder)" # Only to reduce output of set -x
+  ( set -x; WINEPREFIX="${DMM_PRFX}" "${LUT_FLDR}/bin/wine64" "${TMP_FLDR}/dnr.exe" /install /quiet 2> /dev/null ) || exit 6
+}
+
+get_dmm () {
+  # Get the latest DivaModManager
+  # Employ the same "trick" we did with GE-Proton
+  REDIRECT="$(/usr/bin/curl -is https://github.com/TekkaGB/DivaModManager/releases/latest | /bin/sed 's/\r//g' | /bin/grep '^location')"
+  DMM_VRSN="${REDIRECT##*\/}"
+  # This will get redirected as well, but you do NOT want to deal with the actual GitHub download links :O
+  DMM_URL="https://github.com/TekkaGB/DivaModManager/releases/download/${DMM_VRSN}/DivaModManager.zip"
+  echo ":: Setting up DivaModManager v${DMM_VRSN}..."
+  echo " -> Downloading"
+  /usr/bin/curl -L "${DMM_URL}" -o "${TMP_FLDR}/dmm.zip" --progress-bar || exit 7
+  echo " -> Extracting"
+  /usr/bin/unzip "${TMP_FLDR}/dmm.zip" -d "${DMM_FLDR}" || exit 8
+  # This cp line doesn't seem necessary any more
+  # This line stems from GE-Proton 7-16 and .NET Runtime 5.0.17
+  # GE-Proton is now at 7-34, DMM now uses .NET 6.0.2, and it seems things work without the copy
+  # /bin/cp "${DMM_PRFX}/drive_c/Program Files/dotnet/host/fxr/6.0.2/hostfxr.dll" "${DMM_FLDR}"
+}
+
+case "${1}" in
+  run)
+    WINEPREFIX="${DMM_PRFX}" "$(get_lutris_folder)/bin/wine64" "${DMM_FLDR}/DivaModManager.exe"
+  ;;
+  install)
+    # Make the directories we will need
+    /bin/mkdir -p "${DMM_FLDR}" "${DMM_WINE}"
+
+    check_install proton || get_proton
+    check_install dotnet || get_dotnet
+    check_install dmm || get_dmm
+
+    # Find where the source files are
+    SOURCE="$(/usr/bin/realpath "${0}")"
+    SOURCE="${SOURCE%/*}"
+    # If "bin" is in the path assume dmm is "properly" installed
+    # If it's not there, leave the path alone, assuming a "flat" installation
+    SOURCE="${SOURCE/bin/share\/pixmaps}"
+
+    if ! check_install appicon; then
+      /bin/cp "${SOURCE}/dmmlogo.png" "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png"
+      ICONLINE="dmmlogo${TESTING}.png"
+      /bin/sed -i "s|^Icon=.*|Icon=${ICONLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
+    fi
+
+    SOURCE="${SOURCE/pixmaps/applications}"
+
+    # Create a .desktop shortcut in the user's home directory
+    /bin/mkdir -p "${HOME}/.local/share/applications" "${HOME}/.local/share/pixmaps"
+    if ! check_install shortcut; then
+      echo ":: Creating desktop shortcut..."
+      /bin/cp "${SOURCE}/dmm.desktop" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
+      EXECLINE="/usr/bin/env WINEPREFIX='${DMM_PRFX}' '${DMM_WINE}/lutris-${GEP_VRSN}-x86_64/bin/wine64' '${DMM_FLDR}/DivaModManager.exe'"
+      /bin/sed -i "s|^Exec=.*|Exec=${EXECLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
+      /bin/sed -i "/^Hidden=/d" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
+    fi
+  ;;
+  remove)
+    echo ":: Removing ${DMM_ROOT}..."
+    /bin/rm -r "${DMM_ROOT}"
+    echo ":: Removing desktop shortcut..."
+    /bin/rm "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
+    /bin/rm "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png"
+  ;;
+  upgrade)
+    case "${2}" in
+      dotnet)
+        echo "Not implemented yet."
+      ;;
+      lutris|proton)
+        get_proton
+        EXECLINE="/usr/bin/env WINEPREFIX='${DMM_PRFX}' '$(get_lutris_folder)/bin/wine64' '${DMM_FLDR}/DivaModManager.exe'"
+        /bin/sed -i "s|^Exec=.*|Exec=${EXECLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
+      ;;
+      *)
+        echo "Unkown component ${2}"
+        echo "Usage: $(/usr/bin/basename "${0}") upgrade <dotnet|lutris>"
+      ;;
+    esac
+  ;;
+  *)
+    echo "Unknown action ${1}"
+    echo "Usage: $(/usr/bin/basename "${0}") <run|install|remove|upgrade>"
+  ;;
+esac
+
+# We're done with TMP_FLDR, clean it up
+/bin/rm -rf "${TMP_FLDR}"
