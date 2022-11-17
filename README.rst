@@ -49,6 +49,10 @@ Dependancies
 How to run?
 ###########
 
+The ``dmm`` script can either be run from the directory you ``git clone`` into,
+or you can run ``install.sh`` to install files to
+``/usr/local/{bin,share/applications,share/pixmaps}`` for systemwide use.
+
 ``dmm <run|install|upgrade>``
 
 run
