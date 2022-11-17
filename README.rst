@@ -43,7 +43,6 @@ Dependancies
 * pv
 * sed
 * tar
-* wine
 * unzip
 
 ###########
