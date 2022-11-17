@@ -7,6 +7,6 @@ SOURCE='.'
 DESTINATION='/usr/local'
 
 set -x
-/usr/bin/sudo /usr/bin/install -Dm 755 "${SOURCE}/dmm" "${DESTINATION}/bin/"
-/usr/bin/sudo /usr/bin/install -Dm 644 "${SOURCE}/dmmlogo.png" "${DESTINATION}/share/pixmaps"
-/usr/bin/sudo /usr/bin/install -Dm 644 "${SOURCE}/dmm.desktop" "${DESTINATION}/share/applications"
+/usr/bin/sudo /usr/bin/install -Dm 755 "${SOURCE}/dmm" "${DESTINATION}/bin/dmm"
+/usr/bin/sudo /usr/bin/install -Dm 644 "${SOURCE}/dmmlogo.png" "${DESTINATION}/share/pixmaps/dmmlogo.png"
+/usr/bin/sudo /usr/bin/install -Dm 644 "${SOURCE}/dmm.desktop" "${DESTINATION}/share/applications/dmm.desktop"
