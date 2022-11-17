@@ -2,16 +2,19 @@
 
 This is a continuation of the work done by [Caliel666](https://github.com/Caliel666/DivaModManager).
 
-This is a script that sets up DivaModManager manager on Linux using WINE.
-DivaModManager is mod manager for Project DIVA Mega Mix+ written in .NET.
-While .NET isn't _technically_ Windows-only, projects using it must target
-compilation of their .NET application on Linux.  DivaModManager doesn't do
-this, so Linux users are stuck using WINE.  However, DivaModManager requires
-.NET Runtime 6.0.2 and .NET >= 5.0 cannot install in vanilla WINE.
+This is a script that sets up
+[DivaModManager](https://github.com/TekkaGB/DivaModManager)
+on Linux using WINE.  DivaModManager is mod manager for
+[Hatsune Miku Project DIVA Mega Mix+](https://store.steampowered.com/app/1761390/Hatsune_Miku_Project_DIVA_Mega_Mix/)
+written in [.NET](https://dotnet.microsoft.com/en-us/). While .NET isn't
+_technically_ Windows-only, projects using it must target compilation of their
+.NET application on Linux.  DivaModManager doesn't do this, so Linux users are
+stuck using WINE.  However, DivaModManager requires .NET Runtime 6.0.2 and
+.NET >= 5.0 cannot install in vanilla WINE.
 
-This script will download the latest GE-Proton (Lutris), which is based on
-Proton (which is what Steam uses), which is based on WINE, which can
-accomodate .NET >= 5.0.
+This script will download the latest
+[GE build of WINE](https://github.com/GloriousEggroll/wine-ge-custom),
+which can accomodate .NET >= 5.0.
 
 # Dependancies
 
