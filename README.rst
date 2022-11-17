@@ -52,13 +52,13 @@ How to run?
 ``dmm <run|install|upgrade>``
 
 run
-    Runs DivaModManager.  Useful if you want to run DivaModManager from the command line, or something happened with the `.dekstop` shortcut
+    Runs DivaModManager.  Useful if you want to run DivaModManager from the command line, or something happened with the ``.dekstop`` shortcut
 
 install
-    Install everything needed to run DivaModManager under Linux.  Creates `.desktop` shortcut.
+    Install everything needed to run DivaModManager under Linux.  Creates ``.desktop`` shortcut.
 
 upgrade
-    Upgrade `dotnet` (not implemented yet) or `proton`
+    Upgrade ``dotnet`` (not implemented yet) or ``proton``
 
 ############
 Known issues
