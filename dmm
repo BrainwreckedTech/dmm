@@ -131,20 +131,21 @@ case "${1}" in
     SOURCE="${SOURCE/bin/share\/pixmaps}"
 
     if ! check_install appicon; then
+      /bin/mkdir -p "${HOME}/.local/share/pixmaps"
       /bin/cp "${SOURCE}/dmmlogo.png" "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png"
       ICONLINE="dmmlogo${TESTING}.png"
-      /bin/sed -i "s|^Icon=.*|Icon=${ICONLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
     fi
 
     SOURCE="${SOURCE/pixmaps/applications}"
 
     # Create a .desktop shortcut in the user's home directory
-    /bin/mkdir -p "${HOME}/.local/share/applications" "${HOME}/.local/share/pixmaps"
     if ! check_install shortcut; then
+      /bin/mkdir -p "${HOME}/.local/share/applications"
       echo ":: Creating desktop shortcut..."
       /bin/cp "${SOURCE}/dmm.desktop" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
       EXECLINE="/usr/bin/env WINEPREFIX='${DMM_PRFX}' '${DMM_WINE}/lutris-${GEP_VRSN}-x86_64/bin/wine64' '${DMM_FLDR}/DivaModManager.exe'"
       /bin/sed -i "s|^Exec=.*|Exec=${EXECLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
+      /bin/sed -i "s|^Icon=.*|Icon=${ICONLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
       /bin/sed -i "/^Hidden=/d" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
     fi
   ;;
