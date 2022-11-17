@@ -1,2 +1,49 @@
-# dmm
-Linux installation script for DivaModManager
+# What is this?
+
+This is a continuation of the work done by [Caliel666](https://github.com/Caliel666/DivaModManager).
+
+This is a script that sets up DivaModManager manager on Linux using WINE.
+DivaModManager is mod manager for Project DIVA Mega Mix+ written in .NET.
+While .NET isn't _technically_ Windows-only, projects using it must target
+compilation of their .NET application on Linux.  DivaModManager doesn't do
+this, so Linux users are stuck using WINE.  However, DivaModManager requires
+.NET Runtime 6.0.2 and .NET >= 5.0 cannot install in vanilla WINE.
+
+This script will download the latest GE-Proton (Lutris), which is based on
+Proton (which is what Steam uses), which is based on WINE, which can
+accomodate .NET >= 5.0.
+
+# Dependancies
+
+- coreutils
+    - basename
+    - cp
+    - env
+    - mkdir
+    - realpath
+    - rm
+- curl
+- find
+- grep
+- pv
+- sed
+- tar
+- wine
+- unzip
+
+# How to run?
+
+`dmm <run|install|upgrade>`
+
+run
+: Runs DivaModManager.  Useful if you want to run DivaModManager from the command line, or something happened with the `.dekstop` shortcut
+
+install
+: Install everything needed to run DivaModManager under Linux.  Creates `.desktop` shortcut.
+
+upgrade
+: Upgrade `dotnet` (not implemented yet) or `proton`
+
+# Known issues
+
+- You won't be able to run the game via DivaModManager.  It would require having Steam running on WINE in the same prefix.
