@@ -66,14 +66,39 @@ get_lutris_folder () {
   /usr/bin/find "${DMM_WINE}" -type d -name 'lutris-GE-Proton*-x86_64'
 }
 
+get_lutris_version () {
+  case "${1}" in
+    remote)
+      # The /releases/latest URL will always be a redirect to  /releases/tag/[actual]
+      # We can use this to determine what the latest release is automagically
+      REDIRECT="$(/usr/bin/curl -is https://github.com/GloriousEggroll/wine-ge-custom/releases/latest | /bin/sed 's/\r//g' | /bin/grep '^location')"
+      # Drop off everything up to the last slash in the URL
+      echo "${REDIRECT##*/GE-Proton}"
+    ;;
+    local)
+      GEPLOCAL="$(get_lutris_folder)"
+      GEPLOCAL="${GEPLOCAL#*lutris-GE-Proton}"
+      echo "${GEPLOCAL%-x86_64}"
+    ;;
+  esac
+}
+
+get_dotnet_version () {
+  case "${1}" in
+    local)
+      LOCATION="$(/usr/bin/find "${DMM_PRFX}/drive_c/Program Files/dotnet/host/fxr/" -mindepth 1 -maxdepth 1 -type d)"
+      echo "${LOCATION##*/}"
+    ;;
+    remote)
+      REDIRECT="$(/usr/bin/curl -is https://aka.ms/dotnet/6.0/dotnet-runtime-win-x64.zip | /bin/sed 's/\r//g' | /bin/grep '^Location')"
+      NET_VRSN="${REDIRECT##*Runtime/}"
+      echo "${NET_VRSN%/*}"
+    ;;
+  esac
+}
+
 get_proton () {
-  # Get the latest GE-Proton
-  # The /releases/latest URL will always be a redirect to  /releases/tag/[actual]
-  # We can use this to determine what the latest release is automagically
-  REDIRECT="$(/usr/bin/curl -is https://github.com/GloriousEggroll/wine-ge-custom/releases/latest | /bin/sed 's/\r//g' | /bin/grep '^location')"
-  # Drop off everything up to the last slash in the URL
-  GEP_VRSN="${REDIRECT##*\/}"
-  # This will get redirected as well, but you do NOT want to deal with the actual GitHub download links :O
+  GEP_VRSN="GE-Proton$(get_lutris_version remote)"
   WGEC_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/${GEP_VRSN}/wine-lutris-${GEP_VRSN}-x86_64.tar.xz"
   echo ":: Setting up ${GEP_VRSN}..."
   echo " -> Downloading"
@@ -156,7 +181,7 @@ case "${1}" in
     /bin/rm "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
     /bin/rm "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png"
   ;;
-  upgrade)
+  update|upgrade)
     case "${2}" in
       dotnet)
         echo "Not implemented yet."
@@ -167,8 +192,17 @@ case "${1}" in
         /bin/sed -i "s|^Exec=.*|Exec=${EXECLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
       ;;
       *)
-        echo "Unkown component ${2}"
-        echo "Usage: $(/usr/bin/basename "${0}") upgrade <dotnet|lutris>"
+        if [ -n "${2}" ]; then
+          echo "Unkown component ${2}"
+          echo "Usage: $(/usr/bin/basename "${0}") upgrade <dotnet|lutris>"
+        else
+          printf '%-13s %8s %8s\n' '' 'Local' 'Upstream'
+          printf '%-13s %8s %8s\n' 'GE-Proton' "$(get_lutris_version local)" "$(get_lutris_version remote)"
+          printf '%-13s %8s %8s\n' '.NET Runtime' "$(get_dotnet_version local)" "$(get_dotnet_version remote)"
+        fi
+        echo
+        echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <dotnet|proton>"
+        echo "NOTE: Upgrading .NET Runtime is not supported yet."
       ;;
     esac
   ;;

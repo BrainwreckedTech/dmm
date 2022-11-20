@@ -61,8 +61,8 @@ run
 install
     Install everything needed to run DivaModManager under Linux.  Creates ``.desktop`` shortcut.
 
-upgrade
-    Upgrade ``dotnet`` (not implemented yet) or ``proton``
+upgrade [dotnet|proton]
+    With no arguments, print version information.  With argument, upgrade specified component.  (Upgrading .NET Runtime not supported yet.)
 
 ############
 Known issues
