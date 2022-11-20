@@ -25,8 +25,11 @@ download DivaModManager, unpack it, and set up shortcuts to launch it.
 .. _GE build of WINE: https://github.com/GloriousEggroll/wine-ge-custom
 
 ############
-Dependancies
+Dependencies
 ############
+
+The ``dmm`` script will check for all of these and let you know which ones it
+cannot find.
 
 * coreutils
 
@@ -37,13 +40,21 @@ Dependancies
     * realpath
     * rm
 
-* curl
-* find
-* grep
-* pv
-* sed
-* tar
-* unzip
+* Often installed as part of a "base" installation
+
+    * curl
+    * find
+    * grep
+    * sed
+    * tar
+
+* Usually installed as part of "complete" installations
+
+    * unzip
+
+* The oddball that'll probably trip people up
+
+    * pv (used by ``dmm`` for progress during tarball extraction)
 
 ###########
 How to run?
