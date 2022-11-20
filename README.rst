@@ -5,7 +5,7 @@ What is this?
 This is a continuation of the work done by `Caliel666 <https://github.com/Caliel666/DivaModManager>`_.
 
 This is a script that sets up `DivaModManager`_ on Linux using `WINE`_.
-DivaModManager is mod manager for `Hatsune Miku Project DIVA Mega Mix+`_
+DivaModManager is a mod manager for `Hatsune Miku Project DIVA Mega Mix+`_
 written in `.NET`_. While .NET isn't *technically* Windows-only, projects
 using it must target compilation of their .NET application on Linux.
 DivaModManager doesn't do this, so Linux users are stuck using WINE.
