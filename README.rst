@@ -18,9 +18,9 @@ install in vanilla WINE.
 .. _.NET: https://dotnet.microsoft.com/
 
 This script will download the latest `GE build of WINE`_ which can accomodate
-.NET >= 5.0, and set up a custom WINE prefix.  It'll then download .NET Runtime
-6.0.2 and install that into the prefix.  Finally, it'll download DivaModManager,
-unpack it, and set up shortcuts to launch DivaModManager.
+.NET >= 5.0, and set up a custom WINE prefix.  It'll then download the latest
+version of .NET Runtime 6 and install that into the prefix.  Finally, it'll
+download DivaModManager, unpack it, and set up shortcuts to launch it.
 
 .. _GE build of WINE: https://github.com/GloriousEggroll/wine-ge-custom
 
@@ -62,7 +62,7 @@ install
     Install everything needed to run DivaModManager under Linux.  Creates ``.desktop`` shortcut.
 
 upgrade [dotnet|proton]
-    With no arguments, print version information.  With argument, upgrade specified component.  (Upgrading .NET Runtime not supported yet.)
+    With no arguments, print version information.  With argument, upgrade specified component.
 
 ############
 Known issues

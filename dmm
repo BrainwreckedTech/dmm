@@ -108,11 +108,12 @@ get_proton () {
 }
 
 get_dotnet () {
-  # Get .NET Runtime 6.0.2 and install it in the prefix
-  echo ":: Setting up .NET Runtime 6.0.2 in WINE prefix..."
-  DNET_URL=https://download.visualstudio.microsoft.com/download/pr/efa32b7a-6eec-4d97-9cdc-c7336a29a749/3df4296170397cf60884dae1be3d103b/windowsdesktop-runtime-6.0.2-win-x64.exe
+  # Get .NET Runtime and install it in the prefix
+  NET_VRSN="$(get_dotnet_version remote)"
+  echo ":: Setting up .NET Runtime ${NET_VRSN} in WINE prefix..."
+  DNET_URL='https://aka.ms/dotnet/6.0/dotnet-runtime-win-x64.exe'
   echo " -> Downloading"
-  /usr/bin/curl "${DNET_URL}" -o "${TMP_FLDR}/dnr.exe" --progress-bar || exit 5
+  /usr/bin/curl -L "${DNET_URL}" -o "${TMP_FLDR}/dnr.exe" --progress-bar || exit 5
   echo " -> Installing"
   LUT_FLDR="$(get_lutris_folder)" # Only to reduce output of set -x
   ( set -x; WINEPREFIX="${DMM_PRFX}" "${LUT_FLDR}/bin/wine64" "${TMP_FLDR}/dnr.exe" /install /quiet 2> /dev/null ) || exit 6
@@ -184,7 +185,7 @@ case "${1}" in
   update|upgrade)
     case "${2}" in
       dotnet)
-        echo "Not implemented yet."
+        get_dotnet
       ;;
       lutris|proton)
         get_proton
