@@ -128,7 +128,7 @@ case "${1}" in
     SOURCE="${SOURCE%/*}"
     # If "bin" is in the path assume dmm is "properly" installed
     # If it's not there, leave the path alone, assuming a "flat" installation
-    SOURCE="${SOURCE/bin/share\/pixmaps}"
+    echo "${SOURCE}" | /bin/grep -q bin && SOURCE="${SOURCE%bin}share/pixmaps"
 
     if ! check_install appicon; then
       /bin/mkdir -p "${HOME}/.local/share/pixmaps"
@@ -136,7 +136,7 @@ case "${1}" in
       ICONLINE="dmmlogo${TESTING}.png"
     fi
 
-    SOURCE="${SOURCE/pixmaps/applications}"
+    SOURCE="${SOURCE%pixmaps}applications"
 
     # Create a .desktop shortcut in the user's home directory
     if ! check_install shortcut; then
