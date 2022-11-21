@@ -131,10 +131,6 @@ get_dmm () {
   /usr/bin/curl -L "${DMM_URL}" -o "${TMP_FLDR}/dmm.zip" --progress-bar || exit 7
   echo ' -> Extracting'
   /usr/bin/unzip "${TMP_FLDR}/dmm.zip" -d "${DMM_FLDR}" || exit 8
-  # This cp line doesn't seem necessary any more
-  # This line stems from GE-Proton 7-16 and .NET Runtime 5.0.17
-  # GE-Proton is now at 7-34, DMM now uses .NET 6.0.2, and it seems things work without the copy
-  # /bin/cp "${DMM_PRFX}/drive_c/Program Files/dotnet/host/fxr/6.0.2/hostfxr.dll" "${DMM_FLDR}"
 }
 
 case "${1}" in
