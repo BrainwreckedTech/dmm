@@ -47,14 +47,14 @@ check_install () {
     ;;
     shortcut)
       if [ -f "${HOME}/.local/share/applications/dmm${TESTING}.desktop" ]; then
-        echo "Found desktop shortcut in user applications"
+        echo 'Found desktop shortcut in user applications'
       else
         false
       fi
     ;;
     appicon)
       if [ -f "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png" ]; then
-        echo "Found application icon in user pixmaps"
+        echo 'Found application icon in user pixmaps'
       else
         false
       fi
@@ -101,9 +101,9 @@ get_proton () {
   GEP_VRSN="GE-Proton$(get_lutris_version remote)"
   WGEC_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/${GEP_VRSN}/wine-lutris-${GEP_VRSN}-x86_64.tar.xz"
   echo ":: Setting up ${GEP_VRSN}..."
-  echo " -> Downloading"
+  echo ' -> Downloading'
   /usr/bin/curl -L "${WGEC_URL}" -o "${TMP_FLDR}/wine-ge-custom.tar.xz" --progress-bar || exit 3
-  echo " -> Extracting"
+  echo ' -> Extracting'
   /usr/bin/pv "${TMP_FLDR}/wine-ge-custom.tar.xz" | /bin/tar -xJf - -C "${DMM_WINE}" || exit 4
 }
 
@@ -112,9 +112,9 @@ get_dotnet () {
   NET_VRSN="$(get_dotnet_version remote)"
   echo ":: Setting up .NET Runtime ${NET_VRSN} in WINE prefix..."
   DNET_URL='https://aka.ms/dotnet/6.0/dotnet-runtime-win-x64.exe'
-  echo " -> Downloading"
+  echo ' -> Downloading'
   /usr/bin/curl -L "${DNET_URL}" -o "${TMP_FLDR}/dnr.exe" --progress-bar || exit 5
-  echo " -> Installing"
+  echo ' -> Installing'
   LUT_FLDR="$(get_lutris_folder)" # Only to reduce output of set -x
   ( set -x; WINEPREFIX="${DMM_PRFX}" "${LUT_FLDR}/bin/wine64" "${TMP_FLDR}/dnr.exe" /install /quiet 2> /dev/null ) || exit 6
 }
@@ -127,9 +127,9 @@ get_dmm () {
   # This will get redirected as well, but you do NOT want to deal with the actual GitHub download links :O
   DMM_URL="https://github.com/TekkaGB/DivaModManager/releases/download/${DMM_VRSN}/DivaModManager.zip"
   echo ":: Setting up DivaModManager v${DMM_VRSN}..."
-  echo " -> Downloading"
+  echo ' -> Downloading'
   /usr/bin/curl -L "${DMM_URL}" -o "${TMP_FLDR}/dmm.zip" --progress-bar || exit 7
-  echo " -> Extracting"
+  echo ' -> Extracting'
   /usr/bin/unzip "${TMP_FLDR}/dmm.zip" -d "${DMM_FLDR}" || exit 8
   # This cp line doesn't seem necessary any more
   # This line stems from GE-Proton 7-16 and .NET Runtime 5.0.17
@@ -167,7 +167,7 @@ case "${1}" in
     # Create a .desktop shortcut in the user's home directory
     if ! check_install shortcut; then
       /bin/mkdir -p "${HOME}/.local/share/applications"
-      echo ":: Creating desktop shortcut..."
+      echo ':: Creating desktop shortcut...'
       /bin/cp "${SOURCE}/dmm.desktop" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
       EXECLINE="/usr/bin/env WINEPREFIX='${DMM_PRFX}' '${DMM_WINE}/lutris-${GEP_VRSN}-x86_64/bin/wine64' '${DMM_FLDR}/DivaModManager.exe'"
       /bin/sed -i "s|^Exec=.*|Exec=${EXECLINE}|g" "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
@@ -178,7 +178,7 @@ case "${1}" in
   remove)
     echo ":: Removing ${DMM_ROOT}..."
     /bin/rm -r "${DMM_ROOT}"
-    echo ":: Removing desktop shortcut..."
+    echo ':: Removing desktop shortcut...'
     /bin/rm "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
     /bin/rm "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png"
   ;;
@@ -203,7 +203,6 @@ case "${1}" in
         fi
         echo
         echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <dotnet|proton>"
-        echo "NOTE: Upgrading .NET Runtime is not supported yet."
       ;;
     esac
   ;;
