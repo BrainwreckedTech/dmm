@@ -26,6 +26,7 @@ MISSDEPS=0
 [ ! -e /bin/rm ]           && echo 'Command rm not found'       && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/sed ]          && echo 'Command sed not found'      && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/tar ]          && echo 'Command tar not found'      && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/wine ]     && echo 'Command wine not found'     && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /usr/bin/unzip ]    && echo 'Command unzip not found'    && MISSDEPS=$((MISSDEPS+1))
 
 [ ${MISSDEPS} -gt 0 ] && echo 'Please install missing dependencies.' && exit 1

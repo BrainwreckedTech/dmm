@@ -46,6 +46,7 @@ cannot find.
     * find
     * grep
     * sed
+    * wine
     * tar
 
 * Usually installed as part of "complete" installations
