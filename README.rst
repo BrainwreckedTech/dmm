@@ -1,3 +1,11 @@
+.. |LicenseBadge| image:: https://img.shields.io/github/license/BrainwreckedTech/dmm?style=flat-square
+   :alt: Licensed under GPL 3.0
+
+.. |LanguageBadge| image:: https://img.shields.io/badge/written%20in-POSIX%20sh-blue?style=flat-square
+   :alt: Written in POSIX sh
+
+|LicenseBadge| |LanguageBadge|
+
 #############
 What is this?
 #############
