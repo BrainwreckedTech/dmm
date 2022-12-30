@@ -26,7 +26,6 @@ MISSDEPS=0
 [ ! -e /bin/rm ]           && echo 'Command rm not found'       && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/sed ]          && echo 'Command sed not found'      && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/tar ]          && echo 'Command tar not found'      && MISSDEPS=$((MISSDEPS+1))
-[ ! -e /usr/bin/wine ]     && echo 'Command wine not found'     && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /usr/bin/unzip ]    && echo 'Command unzip not found'    && MISSDEPS=$((MISSDEPS+1))
 
 [ ${MISSDEPS} -gt 0 ] && echo 'Please install missing dependencies.' && exit 1
@@ -112,7 +111,7 @@ get_dotnet () {
   # Get .NET Runtime and install it in the prefix
   NET_VRSN="$(get_dotnet_version remote)"
   echo ":: Setting up .NET Runtime ${NET_VRSN} in WINE prefix..."
-  DNET_URL='https://aka.ms/dotnet/6.0/dotnet-runtime-win-x64.exe'
+  DNET_URL='https://aka.ms/dotnet/6.0/windowsdesktop-runtime-win-x64.exe'
   echo ' -> Downloading'
   /usr/bin/curl -L "${DNET_URL}" -o "${TMP_FLDR}/dnr.exe" --progress-bar || exit 5
   echo ' -> Installing'
