@@ -21,7 +21,6 @@ MISSDEPS=0
 [ ! -e /usr/bin/find ]     && echo 'Commnad find not found'     && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/grep ]         && echo 'Command grep not found'     && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/mkdir ]        && echo 'Command mkdir not found'    && MISSDEPS=$((MISSDEPS+1))
-[ ! -e /usr/bin/pv ]       && echo 'Command pv not found'       && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /usr/bin/realpath ] && echo 'Command realpath not found' && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/rm ]           && echo 'Command rm not found'       && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/sed ]          && echo 'Command sed not found'      && MISSDEPS=$((MISSDEPS+1))
@@ -29,6 +28,8 @@ MISSDEPS=0
 [ ! -e /usr/bin/unzip ]    && echo 'Command unzip not found'    && MISSDEPS=$((MISSDEPS+1))
 
 [ ${MISSDEPS} -gt 0 ] && echo 'Please install missing dependencies.' && exit 1
+
+[ ! -e /usr/bin/pv ] && echo "Command pv not found, won't be able to show tar -x progress."
 
 check_install () {
   case "${1}" in
@@ -104,7 +105,12 @@ get_proton () {
   echo ' -> Downloading'
   /usr/bin/curl -L "${WGEC_URL}" -o "${TMP_FLDR}/wine-ge-custom.tar.xz" --progress-bar || exit 3
   echo ' -> Extracting'
-  /usr/bin/pv "${TMP_FLDR}/wine-ge-custom.tar.xz" | /bin/tar -xJf - -C "${DMM_WINE}" || exit 4
+  if [ -e /usr/bin/pv ]; then
+    /usr/bin/pv "${TMP_FLDR}/wine-ge-custom.tar.xz" | /bin/tar -xJf - -C "${DMM_WINE}" || exit 4
+  else
+    echo ' ==> Command pv not found, not able to show extraction progress. Please wait...'
+    /bin/tar -xJf "${TMP_FLDR}/wine-ge-custom.tar.xz" -C "${DMM_WINE}" || exit 4
+  fi
 }
 
 get_dotnet () {
