@@ -63,7 +63,7 @@ check_install () {
 }
 
 get_lutris_folder () {
-  /usr/bin/find "${DMM_WINE}" -type d -name 'lutris-GE-Proton*-x86_64'
+  /usr/bin/find "${DMM_WINE}" -type d -name 'lutris-GE-Proton*-x86_64' | sort -r | head -1
 }
 
 get_lutris_version () {
