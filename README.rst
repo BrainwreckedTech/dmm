@@ -32,6 +32,17 @@ download DivaModManager, unpack it, and set up shortcuts to launch it.
 
 .. _GE build of WINE: https://github.com/GloriousEggroll/wine-ge-custom
 
+################
+Why not use d4m?
+################
+
+Because `d4m`_ will currently `bork any mod that utilizes variants`_.
+
+Using dmm to set up DivaModManger under Linux makes the process painless.
+
+.. _d4m: https://github.com/Brod8362/d4m
+.. _bork any mod that utilizes variants: https://github.com/Brod8362/d4m/issues/27
+
 ############
 Dependencies
 ############
