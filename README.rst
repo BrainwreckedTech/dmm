@@ -71,7 +71,7 @@ cannot find.
 
     * unzip
 
-* The oddball that'll probably trip people up
+* This one is optional (because of Steam Deck) but will provide a progress bar if present
 
     * pv (used by ``dmm`` for progress during tarball extraction)
 
