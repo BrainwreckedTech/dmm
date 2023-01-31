@@ -33,12 +33,17 @@ MISSDEPS=0
 
 check_install () {
   case "${1}" in
+    7zip)
+      if [ -f "${DMM_PRFX}/drive_c/Program Files/7-Zip/7z.exe" ]; then
+        echo "Found 7-Zip $(get_7zip_version local) in WINE prefix"
+      fi
+    ;;
     proton)
       get_lutris_folder | grep -q '^' && echo 'Found existing GE-Proton install' || false
-      ;;
+    ;;
     dotnet)
       if [ -f "${DMM_PRFX}/drive_c/Program Files/dotnet/dotnet.exe" ]; then
-        echo "Found .NET $(ls -1 --color=never "${DMM_PRFX}/drive_c/Program Files/dotnet/host/fxr") in WINE prefix"
+        echo "Found .NET $(get_dotnet_version local) in WINE prefix"
       else
         false
       fi
