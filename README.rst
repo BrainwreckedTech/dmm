@@ -54,6 +54,7 @@ cannot find.
 
     * basename
     * cp
+    * head
     * env
     * mkdir
     * realpath
