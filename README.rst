@@ -17,7 +17,7 @@ DivaModManager is a mod manager for `Hatsune Miku Project DIVA Mega Mix+`_
 written in `.NET`_. While .NET isn't *technically* Windows-only, projects
 using it must target compilation of their .NET application on Linux.
 DivaModManager doesn't do this, so Linux users are stuck using WINE.
-However, DivaModManager requires .NET Runtime 6.0.2 and .NET >= 5.0 cannot
+However, DivaModManager requires .NET Runtime >=6.0.2 and .NET >= 5.0 cannot
 install in vanilla WINE.
 
 .. _DivaModManager: https://github.com/TekkaGB/DivaModManager
