@@ -97,8 +97,8 @@ get_dotnet_version () {
       echo "${LOCATION##*/}"
     ;;
     remote)
-      REDIRECT="$(/usr/bin/curl -is https://aka.ms/dotnet/6.0/dotnet-runtime-win-x64.zip | /bin/sed 's/\r//g' | /bin/grep '^Location')"
-      NET_VRSN="${REDIRECT##*Runtime/}"
+      REDIRECT="$(/usr/bin/curl -is https://aka.ms/dotnet/6.0/windowsdesktop-runtime-win-x64.zip | /bin/sed 's/\r//g' | /bin/grep '^Location')"
+      NET_VRSN="${REDIRECT##*WindowsDesktop/}"
       echo "${NET_VRSN%/*}"
     ;;
   esac
