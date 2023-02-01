@@ -25,12 +25,19 @@ install in vanilla WINE.
 .. _Hatsune Miku Project DIVA Mega Mix+: https://store.steampowered.com/app/1761390/Hatsune_Miku_Project_DIVA_Mega_Mix/
 .. _.NET: https://dotnet.microsoft.com/
 
-This script will download the latest `GE build of WINE`_ which can accomodate
-.NET >= 5.0, and set up a custom WINE prefix.  It'll then download the latest
-version of .NET Runtime 6 and install that into the prefix.  Finally, it'll
-download DivaModManager, unpack it, and set up shortcuts to launch it.
+This script performs the following steps:
+
+#. Download the latest `GE build of WINE`_ which can accomodate .NET >= 5.0,
+   and set up a custom WINE prefix.
+#. Download the latest version of `.NET Runtime 6.0`_ and install it into
+   the prefix.
+#. Download the latest `7-Zip`_ and install it into the prefix so DivaModManager
+   can handle 7z archives in addition to zip archives.
+#. Download DivaModManager, unpack it, and set up shortcuts to launch it.
 
 .. _GE build of WINE: https://github.com/GloriousEggroll/wine-ge-custom
+.. _.NET Runtime 6.0: https://dotnet.microsoft.com/en-us/download/dotnet/6.0
+.. _7-Zip: https://www.7-zip.org
 
 ################
 Why not use d4m?
@@ -92,7 +99,7 @@ run
 install
     Install everything needed to run DivaModManager under Linux.  Creates ``.desktop`` shortcut.
 
-upgrade [dotnet|proton]
+upgrade [7zip|dotnet|proton]
     With no arguments, print version information.  With argument, upgrade specified component.
 
 ############
