@@ -193,7 +193,7 @@ case "${1}" in
       ICONLINE="dmmlogo${TESTING}.png"
     fi
 
-    SOURCE="${SOURCE%pixmaps}applications"
+    SOURCE=$(/usr/bin/printf "${SOURCE}" | /bin/sed 's/pixmaps/applications/g')
 
     # Create a .desktop shortcut in the user's home directory
     if ! check_install shortcut; then
