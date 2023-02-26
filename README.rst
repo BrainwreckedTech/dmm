@@ -64,6 +64,7 @@ cannot find.
     * head
     * env
     * mkdir
+    * printf
     * realpath
     * rm
 

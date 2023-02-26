@@ -22,6 +22,7 @@ MISSDEPS=0
 [ ! -e /bin/grep ]         && echo 'Command grep not found'     && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /usr/bin/head ]     && echo 'Command head not found'     && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/mkdir ]        && echo 'Command mkdir not found'    && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/printf ]   && echo 'Command printf not found'   && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /usr/bin/realpath ] && echo 'Command realpath not found' && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/rm ]           && echo 'Command rm not found'       && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/sed ]          && echo 'Command sed not found'      && MISSDEPS=$((MISSDEPS+1))
@@ -231,10 +232,10 @@ case "${1}" in
           echo "Unkown component ${2}"
           echo "Usage: $(/usr/bin/basename "${0}") upgrade <dotnet|lutris>"
         else
-          printf '%-13s %8s %8s\n' '' 'Local' 'Upstream'
-          printf '%-13s %8s %8s\n' 'GE-Proton' "$(get_lutris_version local)" "$(get_lutris_version remote)"
-          printf '%-13s %8s %8s\n' '.NET Runtime' "$(get_dotnet_version local)" "$(get_dotnet_version remote)"
-          printf '%-13s %8s %8s\n' '7-Zip' "$(get_7zip_version local)" "$(get_7zip_version remote)"
+          /usr/bin/printf '%-13s %8s %8s\n' '' 'Local' 'Upstream'
+          /usr/bin/printf '%-13s %8s %8s\n' 'GE-Proton' "$(get_lutris_version local)" "$(get_lutris_version remote)"
+          /usr/bin/printf '%-13s %8s %8s\n' '.NET Runtime' "$(get_dotnet_version local)" "$(get_dotnet_version remote)"
+          /usr/bin/printf '%-13s %8s %8s\n' '7-Zip' "$(get_7zip_version local)" "$(get_7zip_version remote)"
         fi
         echo
         echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <7zip|dotnet|proton>"
