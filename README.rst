@@ -31,13 +31,10 @@ This script performs the following steps:
    and set up a custom WINE prefix.
 #. Download the latest version of `.NET Runtime 6.0`_ and install it into
    the prefix.
-#. Download the latest `7-Zip`_ and install it into the prefix so DivaModManager
-   can handle 7z archives in addition to zip archives.
 #. Download DivaModManager, unpack it, and set up shortcuts to launch it.
 
 .. _GE build of WINE: https://github.com/GloriousEggroll/wine-ge-custom
 .. _.NET Runtime 6.0: https://dotnet.microsoft.com/en-us/download/dotnet/6.0
-.. _7-Zip: https://www.7-zip.org
 
 ################
 Why not use d4m?

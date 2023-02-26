@@ -35,11 +35,6 @@ MISSDEPS=0
 
 check_install () {
   case "${1}" in
-    7zip)
-      if [ -f "${DMM_PRFX}/drive_c/Program Files/7-Zip/7z.exe" ]; then
-        echo "Found 7-Zip $(get_7zip_version local) in WINE prefix"
-      fi
-    ;;
     proton)
       get_lutris_folder | grep -q '^' && echo 'Found existing GE-Proton install' || false
     ;;
@@ -105,17 +100,6 @@ get_dotnet_version () {
   esac
 }
 
-get_7zip_version () {
-  case "${1}" in
-    local)
-      /usr/bin/head -1 "${DMM_PRFX}/drive_c/Program Files/7-Zip/readme.txt" | /usr/bin/cut -d\  -f2 | /bin/sed 's/\r//g'
-    ;;
-    remote)
-      /usr/bin/curl -s "https://www.7-zip.org/download.html" | /bin/grep "Download 7-Zip" | /usr/bin/head -1 | /usr/bin/cut -d\  -f3
-    ;;
-  esac
-}
-
 get_proton () {
   GEP_VRSN="GE-Proton$(get_lutris_version remote)"
   WGEC_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/${GEP_VRSN}/wine-lutris-${GEP_VRSN}-x86_64.tar.xz"
@@ -143,17 +127,6 @@ get_dotnet () {
   ( set -x; WINEPREFIX="${DMM_PRFX}" "${LUT_FLDR}/bin/wine64" "${TMP_FLDR}/dnr.exe" /install /quiet 2> /dev/null ) || exit 6
 }
 
-get_7zip () {
-  SVNZVRSN="$(get_7zip_version remote)"
-  DOTLESSV=${SVNZVRSN%.*}${SVNZVRSN#*.}
-  SVNZ_URL="https://www.7-zip.org/a/7z${DOTLESSV}-x64.exe"
-  echo ' -> Downloading'
-  /usr/bin/curl -L "${SVNZ_URL}" -o "${TMP_FLDR}/7zi.exe" --progress-bar || exit 7
-  echo ' -> Installing'
-  LUT_FLDR="$(get_lutris_folder)" # Only to reduce output of set -x
-  ( set -x; WINEPREFIX="${DMM_PRFX}" "${LUT_FLDR}/bin/wine64" "${TMP_FLDR}/7zi.exe" /S 2> /dev/null ) || exit 8
-}
-
 get_dmm () {
   # Get the latest DivaModManager
   # Employ the same "trick" we did with GE-Proton
@@ -178,7 +151,6 @@ case "${1}" in
 
     check_install proton || get_proton
     check_install dotnet || get_dotnet
-    check_install 7zip || get_7zip
     check_install dmm || get_dmm
 
     # Find where the source files are
@@ -214,11 +186,34 @@ case "${1}" in
     /bin/rm "${HOME}/.local/share/applications/dmm${TESTING}.desktop"
     /bin/rm "${HOME}/.local/share/pixmaps/dmmlogo${TESTING}.png"
   ;;
+  modup|modupdate)
+    MMP_MODS="$(/bin/grep ModsFolder ~/.dmm/program/Config.json | /bin/sed 's|.*:||g;s|",\r$||g;s|\\\\|/|g')"
+
+    /usr/bin/printf 'LEGEND:   \e[1;32m%-20s\e[1;31m%-20s\e[0m\n\n' "MOD IS UP TO DATE" "MOD UPDATE AVAILABLE"
+
+    /usr/bin/printf '%6s   %-20s   %-20s   %-20s\n' "MOD ID" "LOCAL LAST UPDATE" "REMOTE LAST UPDATE" "MOD NAME"
+    /usr/bin/find "${MMP_MODS}" -name 'mod.json' | /usr/bin/sort | while IFS= read -r MOD_FLDR; do
+      MOD_FLDR="${MOD_FLDR%%/mod.json}"
+      MOD_FLDR="${MOD_FLDR##*/}"
+      METADATA="${MMP_MODS}/${MOD_FLDR}/mod.json"
+      GB_MODID="$(/bin/grep homepage "${METADATA}" | /bin/sed 's|.*/||g;s|",\r$||g')"
+      LUP_DATE="$(/bin/grep lastupdate "${METADATA}" | /bin/sed 's|"\r$||g;s|.*"||g')"
+      LUP_STMP="$(/bin/date -d "${LUP_DATE}Z" +%s)"
+      LUP_DATE="$(/bin/date -d "@${LUP_STMP}" +"%Y-%m-%d %H:%M %Z")"
+      API_URI="https://gamebanana.com/apiv6/Mod/Multi?_csvProperties=_tsDateUpdated&_csvRowIds=${GB_MODID}"
+      RUP_STMP="$(/bin/curl -s "${API_URI}" | /bin/grep _tsDateUpdated | /bin/sed 's|.*: ||g;s|,\r$||g')"
+      RUP_DATE="$(/bin/date -d "@${RUP_STMP}" +"%Y-%m-%d %H:%M %Z")"
+      if [ "${LUP_DATE}" = "${RUP_DATE}" ]; then
+        /usr/bin/printf '\e[1;32m'
+      else
+        /usr/bin/printf '\e[1;31m'
+      fi
+      /usr/bin/printf '%6d   %-20s   %-20s   %-20s\e[0m\n' "${GB_MODID}" "${LUP_DATE}" "${RUP_DATE}" "${MOD_FLDR}"
+    done
+
+  ;;
   update|upgrade)
     case "${2}" in
-      7zip)
-        get_7zip
-      ;;
       dotnet)
         get_dotnet
       ;;
@@ -235,7 +230,6 @@ case "${1}" in
           /usr/bin/printf '%-13s %8s %8s\n' '' 'Local' 'Upstream'
           /usr/bin/printf '%-13s %8s %8s\n' 'GE-Proton' "$(get_lutris_version local)" "$(get_lutris_version remote)"
           /usr/bin/printf '%-13s %8s %8s\n' '.NET Runtime' "$(get_dotnet_version local)" "$(get_dotnet_version remote)"
-          /usr/bin/printf '%-13s %8s %8s\n' '7-Zip' "$(get_7zip_version local)" "$(get_7zip_version remote)"
         fi
         echo
         echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <7zip|dotnet|proton>"
