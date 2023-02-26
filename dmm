@@ -143,11 +143,9 @@ get_dotnet () {
 }
 
 get_7zip () {
-  set -x
   SVNZVRSN="$(get_7zip_version remote)"
   DOTLESSV=${SVNZVRSN%.*}${SVNZVRSN#*.}
   SVNZ_URL="https://www.7-zip.org/a/7z${DOTLESSV}-x64.exe"
-  exit 0
   echo ' -> Downloading'
   /usr/bin/curl -L "${SVNZ_URL}" -o "${TMP_FLDR}/7zi.exe" --progress-bar || exit 7
   echo ' -> Installing'
