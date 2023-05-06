@@ -232,7 +232,7 @@ case "${1}" in
           /usr/bin/printf '%-13s %8s %8s\n' '.NET Runtime' "$(get_dotnet_version local)" "$(get_dotnet_version remote)"
         fi
         echo
-        echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <7zip|dotnet|proton>"
+        echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <dotnet|proton>"
       ;;
     esac
   ;;

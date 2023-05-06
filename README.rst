@@ -97,7 +97,7 @@ run
 install
     Install everything needed to run DivaModManager under Linux.  Creates ``.desktop`` shortcut.
 
-upgrade [7zip|dotnet|proton]
+upgrade [dotnet|proton]
     With no arguments, print version information.  With argument, upgrade specified component.
 
 ############
