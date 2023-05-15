@@ -64,6 +64,7 @@ cannot find.
     * printf
     * realpath
     * rm
+    * sort
 
 * Often installed as part of a "base" installation
 

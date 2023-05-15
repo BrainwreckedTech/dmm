@@ -26,6 +26,7 @@ MISSDEPS=0
 [ ! -e /usr/bin/realpath ] && echo 'Command realpath not found' && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/rm ]           && echo 'Command rm not found'       && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/sed ]          && echo 'Command sed not found'      && MISSDEPS=$((MISSDEPS+1))
+[ ! -e /usr/bin/sort ]     && echo 'Command sort not found'     && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /bin/tar ]          && echo 'Command tar not found'      && MISSDEPS=$((MISSDEPS+1))
 [ ! -e /usr/bin/unzip ]    && echo 'Command unzip not found'    && MISSDEPS=$((MISSDEPS+1))
 
