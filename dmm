@@ -37,7 +37,7 @@ MISSDEPS=0
 check_install () {
   case "${1}" in
     proton)
-      get_lutris_folder | grep -q '^' && echo 'Found existing GE-Proton install' || false
+      get_lutris_folder | /bin/grep -q '^' && echo 'Found existing GE-Proton install' || false
     ;;
     dotnet)
       if [ -f "${DMM_PRFX}/drive_c/Program Files/dotnet/dotnet.exe" ]; then
@@ -67,7 +67,7 @@ check_install () {
 }
 
 get_lutris_folder () {
-  /usr/bin/find "${DMM_WINE}" -type d -name 'lutris-GE-Proton*-x86_64' | sort -r | head -1
+  /usr/bin/find "${DMM_WINE}" -type d -name 'lutris-GE-Proton*-x86_64' | /usr/bin/sort -r | /usr/bin/head -1
 }
 
 get_lutris_version () {
