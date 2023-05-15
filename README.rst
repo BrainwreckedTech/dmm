@@ -58,6 +58,7 @@ cannot find.
 
     * basename
     * cp
+    * cut
     * head
     * env
     * mkdir
