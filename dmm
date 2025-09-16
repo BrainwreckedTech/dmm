@@ -94,6 +94,20 @@ get_lutris_version () {
   esac
 }
 
+get_dmm_version () {
+  case "${1}" in
+    remote)
+      API_URL="https://api.github.com/repos/enomoto-r02/DivaModManager-by-Enomoto/releases/latest"
+      REL_INFO="$(/usr/bin/curl -s "${API_URL}")"
+      echo "${REL_INFO}" | /bin/grep '"tag_name"' | /usr/bin/cut -d\" -f4
+    ;;
+    local)
+      exiftool ~/.dmm/program/DivaModManager.exe | /bin/grep 'Assembly Version' | /usr/bin/cut -d: -f2 | /usr/bin/tr -d ' '
+    ;;
+  esac
+}
+
+
 get_dotnet_version () {
   case "${1}" in
     local)
@@ -136,12 +150,8 @@ get_dotnet () {
 }
 
 get_dmm () {
-  # Get the latest DivaModManager
-  # Employ the same "trick" we did with GE-Proton
-  REDIRECT="$(/usr/bin/curl -is https://github.com/TekkaGB/DivaModManager/releases/latest | /bin/sed 's/\r//g' | /bin/grep '^location')"
-  DMM_VRSN="${REDIRECT##*\/}"
-  # This will get redirected as well, but you do NOT want to deal with the actual GitHub download links :O
-  DMM_URL="https://github.com/TekkaGB/DivaModManager/releases/download/${DMM_VRSN}/DivaModManager.zip"
+  DMM_VRSN="$(get_dmm_version remote)"
+  DMM_URL="https://github.com/enomoto-r02/DivaModManager-by-Enomoto/releases/download/${DMM_VRSN}/DivaModManager-by-Enomoto_v${DMM_VRSN}.zip"
   echo ":: Setting up DivaModManager v${DMM_VRSN}..."
   echo ' -> Downloading'
   /usr/bin/curl -L "${DMM_URL}" -o "${TMP_FLDR}/dmm.zip" --progress-bar || exit 7
@@ -222,6 +232,9 @@ case "${1}" in
   ;;
   update|upgrade)
     case "${2}" in
+      dmm)
+        get_dmm
+      ;;
       dotnet)
         get_dotnet
       ;;
@@ -235,12 +248,13 @@ case "${1}" in
           echo "Unkown component ${2}"
           echo "Usage: $(/usr/bin/basename "${0}") upgrade <dotnet|lutris>"
         else
-          /usr/bin/printf '%-13s %8s %8s\n' '' 'Local' 'Upstream'
-          /usr/bin/printf '%-13s %8s %8s\n' 'GE-Proton' "$(get_lutris_version local)" "$(get_lutris_version remote)"
-          /usr/bin/printf '%-13s %8s %8s\n' '.NET Runtime' "$(get_dotnet_version local)" "$(get_dotnet_version remote)"
+          /usr/bin/printf '%-14s  %8s  %8s\n' '' 'Local' 'Upstream'
+          /usr/bin/printf '%-14s  %8s  %8s\n' 'DivaModManager' "$(get_dmm_version local)" "$(get_dmm_version remote)"
+          /usr/bin/printf '%-14s  %8s  %8s\n' 'GE-Proton' "$(get_lutris_version local)" "$(get_lutris_version remote)"
+          /usr/bin/printf '%-14s  %8s  %8s\n' '.NET Runtime' "$(get_dotnet_version local)" "$(get_dotnet_version remote)"
         fi
         echo
-        echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <dotnet|proton>"
+        echo "To upgrade components: $(/usr/bin/basename "${0}") upgrade <dmm|dotnet|proton>"
       ;;
     esac
   ;;
