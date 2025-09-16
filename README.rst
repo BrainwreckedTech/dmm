@@ -47,6 +47,18 @@ Using dmm to set up DivaModManger under Linux makes the process painless.
 .. _d4m: https://github.com/Brod8362/d4m
 .. _bork any mod that utilizes variants: https://github.com/Brod8362/d4m/issues/27
 
+######################
+Why not use Rust4Diva?
+######################
+
+`Rust4Diva`_ is relatively new and not feature-complete yet.  The most notable
+example being the lack of proper support for `DIVA Mod Archive`_.  If the `issues`_
+don't bother you, though, this can be alternative to Diva Mod Manager.
+
+.. _Rust4Diva: https://github.com/R3alCl0ud/Rust4Diva
+.. _DIVA Mod Archive: https://divamodarchive.com
+.. _issues: https://github.com/R3alCl0ud/Rust4Diva/issues
+
 ############
 Dependencies
 ############
